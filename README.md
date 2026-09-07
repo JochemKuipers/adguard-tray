@@ -21,7 +21,11 @@ sudo apt update && sudo apt upgrade
 The app's own "Application update" button talks to GitHub; on an apt install
 use `apt upgrade` instead.
 
-## Package a new upstream release
+CI checks [RiDDiX/adguard-tray](https://github.com/RiDDiX/adguard-tray) twice a day.
+When there is a newer release it bumps `debian/changelog`, builds the `.deb`,
+and publishes the APT repo. You can also run the **Release** workflow by hand.
+
+To package a version yourself:
 
 ```bash
 ./packaging/sync-upstream.sh          # compare to the latest GitHub release

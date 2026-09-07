@@ -1,19 +1,90 @@
 name: Release
 
 on:
+  schedule:
+    # 06:00 and 18:00 UTC
+    - cron: '0 6,18 * * *'
   push:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Build the version in debian/changelog even if it already matches upstream'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 permissions:
   contents: write
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+      version: ${{ steps.decide.outputs.version }}
+      deb_version: ${{ steps.decide.outputs.deb_version }}
+      updated: ${{ steps.decide.outputs.updated }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install check tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            dpkg-dev devscripts curl ca-certificates python3
+
+      - name: Decide whether to build
+        id: decide
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            CHG="$(dpkg-parsechangelog -S Version)"
+            UPSTREAM="${CHG%-*}"
+            TAG="${GITHUB_REF_NAME#v}"
+            if [[ "${TAG}" != "${UPSTREAM}" ]]; then
+              echo "Tag v${TAG} does not match debian/changelog ${CHG}" >&2
+              exit 1
+            fi
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "version=${UPSTREAM}" >> "$GITHUB_OUTPUT"
+            echo "deb_version=${CHG}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          ./packaging/sync-upstream.sh --ci
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.force }}" == "true" ]]; then
+            CHG="$(dpkg-parsechangelog -S Version)"
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            echo "version=${CHG%-*}" >> "$GITHUB_OUTPUT"
+            echo "deb_version=${CHG}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload bumped changelog
+        if: steps.decide.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: debian-changelog
+          path: debian/changelog
+
   package:
+    needs: check
+    if: needs.check.outputs.build == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Apply bumped changelog
+        if: needs.check.outputs.updated == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: debian-changelog
+          path: debian
 
       - name: Install Debian tooling
         run: |
@@ -27,13 +98,7 @@ jobs:
         id: version
         run: |
           CHG="$(dpkg-parsechangelog -S Version)"
-          TAG="${GITHUB_REF_NAME#v}"
-          UPSTREAM="${CHG%-*}"
-          if [[ "${GITHUB_REF_TYPE}" == "tag" && "${TAG}" != "${UPSTREAM}" ]]; then
-            echo "Tag v${TAG} does not match debian/changelog ${CHG}" >&2
-            exit 1
-          fi
-          echo "version=${UPSTREAM}" >> "$GITHUB_OUTPUT"
+          echo "version=${CHG%-*}" >> "$GITHUB_OUTPUT"
           echo "deb_version=${CHG}" >> "$GITHUB_OUTPUT"
 
       - name: Fetch upstream and build .deb
@@ -105,10 +170,23 @@ jobs:
           name: debian-package
           path: dist/adguard-tray_*_all.deb
 
+      - name: Commit changelog and tag
+        if: needs.check.outputs.updated == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add debian/changelog
+          git commit -m "chore: package upstream ${{ needs.check.outputs.version }}"
+          git tag "v${{ needs.check.outputs.version }}"
+          git push origin HEAD "v${{ needs.check.outputs.version }}"
+
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [check, package]
+    if: |
+      always() &&
+      needs.package.result == 'success' &&
+      (startsWith(github.ref, 'refs/tags/v') || needs.check.outputs.updated == 'true')
     runs-on: ubuntu-latest
-    needs: package
     steps:
       - uses: actions/checkout@v4
 
@@ -117,19 +195,13 @@ jobs:
           name: debian-package
           path: dist
 
-      - name: Version from changelog
-        id: version
-        run: |
-          CHG="$(dpkg-parsechangelog -S Version)"
-          echo "version=${CHG%-*}" >> "$GITHUB_OUTPUT"
-          echo "deb_version=${CHG}" >> "$GITHUB_OUTPUT"
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: adguard-tray ${{ steps.version.outputs.deb_version }} (upstream ${{ steps.version.outputs.version }})
+          tag_name: v${{ needs.check.outputs.version }}
+          name: adguard-tray ${{ needs.check.outputs.deb_version }} (upstream ${{ needs.check.outputs.version }})
           body: |
-            Unofficial Debian package of [RiDDiX/adguard-tray ${{ steps.version.outputs.version }}](https://github.com/RiDDiX/adguard-tray/releases/tag/v${{ steps.version.outputs.version }}).
+            Unofficial Debian package of [RiDDiX/adguard-tray ${{ needs.check.outputs.version }}](https://github.com/RiDDiX/adguard-tray/releases/tag/v${{ needs.check.outputs.version }}).
 
             ## Installation
 

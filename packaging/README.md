@@ -21,7 +21,13 @@ releases into a signed APT repository on GitHub Pages
 3. After the first successful tag workflow, set the repository Pages source
    to the `gh-pages` branch.
 
-## New upstream version
+## Automatic updates
+
+The Release workflow runs at 06:00 and 18:00 UTC. If RiDDiX has a newer
+GitHub release, it bumps `debian/changelog`, builds, and publishes. A
+manual run with **force** rebuilds the currently packaged version.
+
+## New upstream version (manual)
 
 ```bash
 ./packaging/sync-upstream.sh --update
