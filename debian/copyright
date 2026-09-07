@@ -9,7 +9,7 @@ Files: *
 Copyright: 2026 RiDDiX
 License: MIT
 
-Files: debian/* packaging/* install.sh
+Files: debian/* packaging/*
 Copyright: 2026 Jochem Kuipers
 License: MIT
 

@@ -91,7 +91,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential debhelper dh-python python3 dpkg-dev lintian \
-            apt-utils gnupg fakeroot curl ca-certificates \
+            fakeroot curl ca-certificates \
             python3-pyqt6 libgl1 libegl1
 
       - name: Version from changelog
@@ -126,44 +126,6 @@ jobs:
           # Ubuntu's lintian rejects Debian suite names in .changes; this is
           # a third-party repo, so check the .deb only.
           lintian --fail-on error dist/adguard-tray_*_all.deb
-
-      - name: Import APT signing key
-        env:
-          APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
-        run: |
-          test -n "${APT_GPG_PRIVATE_KEY}" || {
-            echo "APT_GPG_PRIVATE_KEY secret is not set" >&2
-            exit 1
-          }
-          mkdir -p ~/.gnupg
-          chmod 700 ~/.gnupg
-          printf '%s\n' "${APT_GPG_PRIVATE_KEY}" | gpg --batch --import
-          KEY_ID="$(gpg --batch --list-secret-keys --with-colons | awk -F: '/^sec:/{print $5; exit}')"
-          test -n "${KEY_ID}"
-          echo "GPG_KEY_ID=${KEY_ID}" >> "$GITHUB_ENV"
-
-      - name: Fetch existing APT repo
-        continue-on-error: true
-        run: |
-          git clone --depth 1 --branch gh-pages \
-            "https://github.com/${{ github.repository }}.git" apt-repo
-          rm -rf apt-repo/.git
-
-      - name: Publish APT repo
-        env:
-          GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
-        run: |
-          mkdir -p apt-repo
-          touch apt-repo/.nojekyll
-          ./packaging/publish-apt-repo.sh "$(pwd)/apt-repo" dist/adguard-tray_*_all.deb
-
-      - name: Deploy GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./apt-repo
-          force_orphan: false
-          enable_jekyll: false
 
       - uses: actions/upload-artifact@v4
         with:
@@ -206,7 +168,10 @@ jobs:
             ## Installation
 
             ```
-            curl -fsSL https://jochemkuipers.github.io/adguard-tray/install.sh | sudo bash
+            curl -fsSL https://jochemkuipers.github.io/apt-repo/jochem.sources \
+              | sudo tee /etc/apt/sources.list.d/jochem.sources
+            sudo apt update
+            sudo apt install adguard-tray
             ```
 
             ## Update
