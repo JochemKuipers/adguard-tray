@@ -39,7 +39,7 @@ builds the `.deb`, and publishes
 Local build (no publish):
 
 ```bash
-sudo apt install debhelper dh-python dpkg-dev devscripts curl
+sudo apt install build-essential debhelper dh-python dpkg-dev devscripts curl
 ./packaging/build-deb.sh          # version from debian/changelog
 sudo apt install ./dist/adguard-tray_*_all.deb
 ```

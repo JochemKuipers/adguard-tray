@@ -19,7 +19,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            debhelper dh-python python3 dpkg-dev lintian \
+            build-essential debhelper dh-python python3 dpkg-dev lintian \
             apt-utils gnupg fakeroot curl ca-certificates \
             python3-pyqt6 libgl1 libegl1
 
