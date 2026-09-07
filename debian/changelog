@@ -1,4 +1,4 @@
-adguard-tray (1.10.0-1) stable; urgency=medium
+adguard-tray (1.10.0-1) unstable; urgency=medium
 
   * Initial Debian package of upstream 1.10.0.
 

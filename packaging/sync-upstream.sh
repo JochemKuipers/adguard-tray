@@ -39,7 +39,7 @@ fi
 
 export DEBFULLNAME="${DEBFULLNAME:-Jochem Kuipers}"
 export DEBEMAIL="${DEBEMAIL:-jochem@kuipers.cc}"
-dch --changelog "${ROOT}/debian/changelog" --newversion "${LATEST}-1" --distribution stable \
+dch --changelog "${ROOT}/debian/changelog" --newversion "${LATEST}-1" --distribution unstable \
   "Package upstream ${LATEST}."
 echo "Updated debian/changelog to ${LATEST}-1"
 echo "Commit, tag v${LATEST}, and push to publish."
