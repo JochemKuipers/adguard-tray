@@ -30,7 +30,7 @@ jobs:
       deb_version: ${{ steps.decide.outputs.deb_version }}
       updated: ${{ steps.decide.outputs.updated }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install check tooling
         run: |
@@ -67,7 +67,7 @@ jobs:
 
       - name: Upload bumped changelog
         if: steps.decide.outputs.updated == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: debian-changelog
           path: debian/changelog
@@ -77,11 +77,11 @@ jobs:
     if: needs.check.outputs.build == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Apply bumped changelog
         if: needs.check.outputs.updated == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: debian-changelog
           path: debian
@@ -127,7 +127,7 @@ jobs:
           # a third-party repo, so check the .deb only.
           lintian --fail-on error dist/adguard-tray_*_all.deb
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: debian-package
           path: dist/adguard-tray_*_all.deb
@@ -144,21 +144,18 @@ jobs:
 
   release:
     needs: [check, package]
-    if: |
-      always() &&
-      needs.package.result == 'success' &&
-      (startsWith(github.ref, 'refs/tags/v') || needs.check.outputs.updated == 'true')
+    if: always() && needs.package.result == 'success'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: debian-package
           path: dist
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.check.outputs.version }}
           name: adguard-tray ${{ needs.check.outputs.deb_version }} (upstream ${{ needs.check.outputs.version }})
