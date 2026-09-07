@@ -1,0 +1,34 @@
+.TH ADGUARD-TRAY 1 "September 2026" "adguard-tray 1.10.0" "User Commands"
+.SH NAME
+adguard-tray \- system tray monitor and controller for adguard-cli
+.SH SYNOPSIS
+.B adguard-tray
+[\fIOPTION\fR]...
+.SH DESCRIPTION
+Shows AdGuard status in the system tray, starts and stops adguard-cli,
+and manages filters, userscripts, HTTPS certificates and activity
+statistics.
+.SH OPTIONS
+.TP
+.BR \-V ", " \-\-version
+Print the version and exit.
+.TP
+.B \-\-check-update
+Check whether a newer release exists and exit.
+.TP
+.B \-\-update
+Print the command used to install a newer release (apt, or
+.B git pull
+from a source checkout) and exit.
+.TP
+.BR \-h ", " \-\-help
+Print help and exit.
+.SH FILES
+.TP
+.I ~/.config/adguard-tray/config.json
+Application settings.
+.TP
+.I ~/.local/share/adguard-tray/adguard-tray.log
+Rotating log file.
+.SH SEE ALSO
+Homepage: https://github.com/RiDDiX/adguard-tray

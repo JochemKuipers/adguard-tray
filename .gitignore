@@ -1,28 +1,21 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-*.egg-info/
+# Fetched upstream and build outputs
+upstream/
 dist/
-build/
-.eggs/
-*.egg
-.venv/
-venv/
-env/
+*.orig.tar.gz
+__pycache__/
+*.pyc
 
-# IDE
+# Debian packaging artifacts
+debian/.debhelper/
+debian/adguard-tray/
+debian/files
+debian/*.substvars
+debian/*.debhelper
+debian/debhelper-build-stamp
+
+# IDE / OS
 .vscode/
 .idea/
 *.swp
 *.swo
-*.kate-swp
-
-# OS
 .DS_Store
-Thumbs.db
-
-# Project runtime files (user-local, not part of the repo)
-*.log

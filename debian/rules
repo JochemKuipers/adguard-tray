@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+# File copy + dh_python3 only. Do not invoke pyproject/setuptools:
+# Bookworm and Ubuntu 24.04 ship setuptools older than the 77+ this
+# project's pyproject.toml asks for.
+
+%:
+	dh $@ --with python3 --buildsystem=none
+
+override_dh_install:
+	dh_install
+	find debian/adguard-tray -depth -type d -name __pycache__ -exec rm -rf {} +
+	find debian/adguard-tray -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+	install -D -m755 debian/wrapper/adguard-tray \
+		debian/adguard-tray/usr/bin/adguard-tray

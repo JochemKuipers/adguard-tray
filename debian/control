@@ -1,0 +1,32 @@
+Source: adguard-tray
+Section: utils
+Priority: optional
+Maintainer: Jochem Kuipers <jochem@kuipers.cc>
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               python3
+Standards-Version: 4.7.0
+Homepage: https://github.com/RiDDiX/adguard-tray
+Vcs-Browser: https://github.com/JochemKuipers/adguard-tray
+Vcs-Git: https://github.com/JochemKuipers/adguard-tray.git
+Rules-Requires-Root: no
+
+Package: adguard-tray
+Architecture: all
+Depends: ${python3:Depends},
+         ${misc:Depends},
+         python3,
+         python3-pyqt6,
+         python3-yaml,
+         libnotify-bin,
+         pkexec | policykit-1
+Recommends: libnss3-tools
+Description: system tray monitor and controller for adguard-cli
+ Shows AdGuard status in the system tray, starts and stops adguard-cli,
+ and manages filters, userscripts, HTTPS certificates and activity
+ statistics. Works on Wayland and X11 (KDE Plasma, Hyprland, and others).
+ .
+ This package builds the upstream project at
+ https://github.com/RiDDiX/adguard-tray without modifying it.
+ adguard-cli itself is not included; install it with the official
+ upstream script.
