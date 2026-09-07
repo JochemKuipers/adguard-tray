@@ -58,11 +58,9 @@ jobs:
 
       - name: lintian
         run: |
-          if compgen -G "dist/adguard-tray_*.changes" > /dev/null; then
-            lintian --fail-on error dist/adguard-tray_*.changes
-          else
-            lintian --fail-on error dist/adguard-tray_*.deb
-          fi
+          # Ubuntu's lintian rejects Debian suite names in .changes; this is
+          # a third-party repo, so check the .deb only.
+          lintian --fail-on error dist/adguard-tray_*_all.deb
 
       - name: Import APT signing key
         env:
