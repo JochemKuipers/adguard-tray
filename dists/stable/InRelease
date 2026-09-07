@@ -1,0 +1,50 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: all amd64 arm64
+Codename: stable
+Components: main
+Date: Mon, 07 Sep 2026 01:00:56 +0000
+Description: adguard-tray APT repository
+Label: adguard-tray
+Origin: adguard-tray
+Suite: stable
+MD5Sum:
+ 2fe713aa9d104888b271eb4782e48489              199 Release
+ 82643e9fa63fd01b8a2e5f4c3ac632c7             1178 main/binary-all/Packages
+ 86011347859bf9dfbf74d0030a794436              750 main/binary-all/Packages.gz
+ 82643e9fa63fd01b8a2e5f4c3ac632c7             1178 main/binary-amd64/Packages
+ 86011347859bf9dfbf74d0030a794436              750 main/binary-amd64/Packages.gz
+ 82643e9fa63fd01b8a2e5f4c3ac632c7             1178 main/binary-arm64/Packages
+ 86011347859bf9dfbf74d0030a794436              750 main/binary-arm64/Packages.gz
+SHA1:
+ 6e98767d109621d7aaf4e9c97001df57b7665e7b              199 Release
+ 8593995fea3aee61babd8a519605ae0c58e00e4b             1178 main/binary-all/Packages
+ 9fa2a13897b07ddcc1e14505aa62523e51f1f408              750 main/binary-all/Packages.gz
+ 8593995fea3aee61babd8a519605ae0c58e00e4b             1178 main/binary-amd64/Packages
+ 9fa2a13897b07ddcc1e14505aa62523e51f1f408              750 main/binary-amd64/Packages.gz
+ 8593995fea3aee61babd8a519605ae0c58e00e4b             1178 main/binary-arm64/Packages
+ 9fa2a13897b07ddcc1e14505aa62523e51f1f408              750 main/binary-arm64/Packages.gz
+SHA256:
+ 616ad224e6bf03cf7d845df06d0e9974d600ca667a3f6431ef5c7f6c92c58977              199 Release
+ f7c0b78b961845cab29476a70a810acf79e020fc2fa08f332bcde36770cdd459             1178 main/binary-all/Packages
+ 8a85862b2151900e552f38364b434e8492e2fd82ca39ea8964f09a2f3afb5c9a              750 main/binary-all/Packages.gz
+ f7c0b78b961845cab29476a70a810acf79e020fc2fa08f332bcde36770cdd459             1178 main/binary-amd64/Packages
+ 8a85862b2151900e552f38364b434e8492e2fd82ca39ea8964f09a2f3afb5c9a              750 main/binary-amd64/Packages.gz
+ f7c0b78b961845cab29476a70a810acf79e020fc2fa08f332bcde36770cdd459             1178 main/binary-arm64/Packages
+ 8a85862b2151900e552f38364b434e8492e2fd82ca39ea8964f09a2f3afb5c9a              750 main/binary-arm64/Packages.gz
+SHA512:
+ dd7395928dfe775f0cfa72d637396815889fe0cafeb287efd55521031454f0150eafc7457bf2b133f83742f6be53e19dee0df72bbc7a421cd233510053d62bcf              199 Release
+ b018db042169cc567a163f24651f442bf07ca5e158a32a1a56e08eef19cbe128709c1e45a04a2fa74b3ca476fb5c15ac5c14191a418c0950e27d599ed69cb249             1178 main/binary-all/Packages
+ 0799ea4fd7e2ee91e31cef2bca1e332f2b107a44ffe6bb13b9ac960cc43c6bd89191795eff8f78c57592742f4ca15e0eb44822ad0b406a8a0bafae744a44c7d7              750 main/binary-all/Packages.gz
+ b018db042169cc567a163f24651f442bf07ca5e158a32a1a56e08eef19cbe128709c1e45a04a2fa74b3ca476fb5c15ac5c14191a418c0950e27d599ed69cb249             1178 main/binary-amd64/Packages
+ 0799ea4fd7e2ee91e31cef2bca1e332f2b107a44ffe6bb13b9ac960cc43c6bd89191795eff8f78c57592742f4ca15e0eb44822ad0b406a8a0bafae744a44c7d7              750 main/binary-amd64/Packages.gz
+ b018db042169cc567a163f24651f442bf07ca5e158a32a1a56e08eef19cbe128709c1e45a04a2fa74b3ca476fb5c15ac5c14191a418c0950e27d599ed69cb249             1178 main/binary-arm64/Packages
+ 0799ea4fd7e2ee91e31cef2bca1e332f2b107a44ffe6bb13b9ac960cc43c6bd89191795eff8f78c57592742f4ca15e0eb44822ad0b406a8a0bafae744a44c7d7              750 main/binary-arm64/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQTvLITCSbLr102G0E8TJSENQPlqHgUCap4MyAAKCRATJSENQPlq
+HsEUAPoCMfXP6NQki7EPLznCav806Q99DR3LTEXtnXhONxHeEAEAvZWgz0qXqbwX
+MCoV6EGmb7VfOjnQPpsKNQnXW6CutAs=
+=pjlI
+-----END PGP SIGNATURE-----
