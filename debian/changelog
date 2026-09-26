@@ -1,3 +1,9 @@
+adguard-tray (2.0.0-1) unstable; urgency=medium
+
+  * Package upstream 2.0.0.
+
+ -- Jochem Kuipers <jochem@kuipers.cc>  Sat, 26 Sep 2026 10:28:37 +0000
+
 adguard-tray (1.10.0-1) unstable; urgency=medium
 
   * Initial Debian package of upstream 1.10.0.
