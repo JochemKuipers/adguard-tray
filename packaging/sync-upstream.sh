@@ -27,10 +27,42 @@ write_output() {
 
 CURRENT="$(dpkg-parsechangelog -l "${ROOT}/debian/changelog" -S Version)"
 CURRENT="${CURRENT%-*}"
+CURRENT_DEB_VERSION="$(dpkg-parsechangelog -l "${ROOT}/debian/changelog" -S Version)"
 
 API="https://api.github.com/repos/RiDDiX/adguard-tray/releases/latest"
-TAG="$(curl -fsSL -H 'Accept: application/vnd.github+json' "${API}" \
-  | python3 -c 'import json,sys; print(json.load(sys.stdin).get("tag_name",""))')"
+
+RAW_RESPONSE=""
+if ! RAW_RESPONSE="$(curl -fsSL \
+  -H 'Accept: application/vnd.github+json' \
+  "${API}")"; then
+  if [[ "${CI}" -eq 1 ]]; then
+    echo "Could not fetch latest upstream release; skipping build for this CI run." >&2
+    write_output current "${CURRENT}"
+    write_output latest "${CURRENT}"
+    write_output version "${CURRENT}"
+    write_output deb_version "${CURRENT_DEB_VERSION}"
+    write_output build false
+    write_output updated false
+    exit 0
+  fi
+  echo "Could not fetch latest upstream release." >&2
+  exit 1
+fi
+
+if ! TAG="$(printf '%s' "${RAW_RESPONSE}" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("tag_name",""))')"; then
+  if [[ "${CI}" -eq 1 ]]; then
+    echo "Could not parse latest upstream release response; skipping build for this CI run." >&2
+    write_output current "${CURRENT}"
+    write_output latest "${CURRENT}"
+    write_output version "${CURRENT}"
+    write_output deb_version "${CURRENT_DEB_VERSION}"
+    write_output build false
+    write_output updated false
+    exit 0
+  fi
+  echo "Could not parse latest upstream release response." >&2
+  exit 1
+fi
 LATEST="${TAG#v}"
 
 if [[ -z "${LATEST}" ]]; then
@@ -56,7 +88,7 @@ if [[ "${newer}" -eq 0 ]]; then
   write_output current "${CURRENT}"
   write_output latest "${LATEST}"
   write_output version "${CURRENT}"
-  write_output deb_version "$(dpkg-parsechangelog -l "${ROOT}/debian/changelog" -S Version)"
+  write_output deb_version "${CURRENT_DEB_VERSION}"
   write_output build false
   write_output updated false
   exit 0
