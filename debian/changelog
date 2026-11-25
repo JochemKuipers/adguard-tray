@@ -1,3 +1,9 @@
+adguard-tray (2.4.1-1) unstable; urgency=medium
+
+  * Package upstream 2.4.1.
+
+ -- Jochem Kuipers <jochem@kuipers.cc>  Wed, 25 Nov 2026 01:43:54 +0000
+
 adguard-tray (2.4.0-1) unstable; urgency=medium
 
   * Package upstream 2.4.0.
